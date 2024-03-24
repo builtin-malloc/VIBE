@@ -52,8 +52,14 @@ BIN := $(OUTDIR)/$(NAME)-$(VERSION)-$(CONFIG)
 ## COMPILER                                                                   ##
 ################################################################################
 
-CC ?= cc
-LD ?= ld
+ifeq ($(OS), Darwin)
+	CC ?= clang
+	LD ?= clang
+endif
+ifeq ($(OS), Linux)
+	CC ?= gcc
+	LD ?= gcc
+endif
 
 CFLAGS  :=
 LDFLAGS :=
@@ -62,8 +68,6 @@ CFLAGS += -std=c17 -c -MMD
 CFLAGS += -I$(INCDIR) -I$(CFGDIR)
 CFLAGS += -Werror
 CFLAGS += -DVIBE_VERSION=\"$(VERSION)\"
-
-LDFLAGS += -lc
 
 ifeq ($(CONFIG), release)
 	CFLAGS += -O3 -DNDEBUG
