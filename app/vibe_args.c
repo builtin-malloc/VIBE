@@ -24,7 +24,10 @@ VIBE_Args_Release(VIBE_Args args[static 1])
 // =============================================================================
 
 void
-VIBE_Args_Parse(VIBE_Args args[static 1], int argc, char* argv[])
+VIBE_Args_Parse(VIBE_Args     args[static 1],
+                int           argc,
+                char*         argv[],
+                VIBE_ErrorCtx errs[static 1])
 {
   assert(argc > 0);
   assert(argv);
@@ -33,46 +36,53 @@ VIBE_Args_Parse(VIBE_Args args[static 1], int argc, char* argv[])
     const char* const arg = argv[i];
 
     if (VIBE_IsLongArg(arg))
-      VIBE_Args_ParseLong(args, arg);
+      VIBE_Args_ParseLong(args, arg, errs);
     if (VIBE_IsShortArg(arg))
-      VIBE_Args_ParseShort(args, arg);
+      VIBE_Args_ParseShort(args, arg, errs);
     if (VIBE_IsFileArg(arg))
-      VIBE_Args_ParseFile(args, arg);
+      VIBE_Args_ParseFile(args, arg, errs);
   }
 }
 
 void
-VIBE_Args_ParseLong(VIBE_Args args[static 1], const char* arg)
+VIBE_Args_ParseLong(VIBE_Args     args[static 1],
+                    const char*   arg,
+                    VIBE_ErrorCtx errs[static 1])
 {
   if (strcmp(arg, VIBE_ARGS_LONG_HELP) == 0) {
     VIBE_Args_SetApp(args, VIBE_APP_HELP);
   } else if (strcmp(arg, VIBE_ARGS_LONG_VERSION) == 0) {
     VIBE_Args_SetApp(args, VIBE_APP_VERSION);
   } else {
-    // TODO(daniel): Print warning
+    VIBE_Warning(errs, VIBE_ERRNO_ARGS_UNKNOWN, arg);
     VIBE_Args_SetApp(args, VIBE_APP_HELP);
   }
 }
 
 void
-VIBE_Args_ParseShort(VIBE_Args args[static 1], const char* arg)
+VIBE_Args_ParseShort(VIBE_Args     args[static 1],
+                     const char*   arg,
+                     VIBE_ErrorCtx errs[static 1])
 {
   if (strcmp(arg, VIBE_ARGS_SHORT_HELP) == 0) {
     VIBE_Args_SetApp(args, VIBE_APP_HELP);
   } else if (strcmp(arg, VIBE_ARGS_SHORT_VERSION) == 0) {
     VIBE_Args_SetApp(args, VIBE_APP_VERSION);
   } else {
-    // TODO(daniel): Print warning
+    VIBE_Warning(errs, VIBE_ERRNO_ARGS_UNKNOWN, arg);
     VIBE_Args_SetApp(args, VIBE_APP_HELP);
   }
 }
 
 void
-VIBE_Args_ParseFile(VIBE_Args args[static 1], const char* arg)
+VIBE_Args_ParseFile(VIBE_Args     args[static 1],
+                    const char*   arg,
+                    VIBE_ErrorCtx errs[static 1])
 {
   // TODO(daniel): Implement this
   (void)args;
   (void)arg;
+  (void)errs;
 }
 
 VIBE_Bool

@@ -1,6 +1,7 @@
 #ifndef VIBE_ARGS_H
 #define VIBE_ARGS_H
 
+#include <vibe_errors.h>
 #include <vibe_types.h>
 
 // =============================================================================
@@ -49,13 +50,22 @@ VIBE_Args_Release(VIBE_Args args[static 1]);
 // =============================================================================
 
 void
-VIBE_Args_Parse(VIBE_Args args[static 1], int argc, char* argv[]);
+VIBE_Args_Parse(VIBE_Args     args[static 1],
+                int           argc,
+                char*         argv[],
+                VIBE_ErrorCtx errs[static 1]);
 void
-VIBE_Args_ParseLong(VIBE_Args args[static 1], const char* arg);
+VIBE_Args_ParseLong(VIBE_Args     args[static 1],
+                    const char*   arg,
+                    VIBE_ErrorCtx errs[static 1]);
 void
-VIBE_Args_ParseShort(VIBE_Args args[static 1], const char* arg);
+VIBE_Args_ParseShort(VIBE_Args     args[static 1],
+                     const char*   arg,
+                     VIBE_ErrorCtx errs[static 1]);
 void
-VIBE_Args_ParseFile(VIBE_Args args[static 1], const char* arg);
+VIBE_Args_ParseFile(VIBE_Args     args[static 1],
+                    const char*   arg,
+                    VIBE_ErrorCtx errs[static 1]);
 
 VIBE_Bool
 VIBE_IsLongArg(const char* arg);

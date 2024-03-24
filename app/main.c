@@ -15,7 +15,8 @@ static const char VIBE_VERSION_MESSAGE[] = "vibe v" VIBE_VERSION;
 // == GLOBAL DATA
 // =============================================================================
 
-static VIBE_Args args = VIBE_ARGS_DEFAULT;
+static VIBE_Args     args   = VIBE_ARGS_DEFAULT;
+static VIBE_ErrorCtx errors = VIBE_ERROR_CTX_DEFAULT;
 
 // =============================================================================
 // == MAIN
@@ -24,20 +25,25 @@ static VIBE_Args args = VIBE_ARGS_DEFAULT;
 int
 main(int argc, char* argv[])
 {
+  VIBE_ErrorCtx_Acquire(&errors);
   VIBE_Args_Acquire(&args);
-  VIBE_Args_Parse(&args, argc, argv);
 
-  VIBE_Main(&args);
+  VIBE_Args_Parse(&args, argc, argv, &errors);
+
+  const int exit_code = VIBE_Main(&args, &errors);
 
   VIBE_Args_Release(&args);
+  VIBE_ErrorCtx_Release(&errors);
+
+  return exit_code;
 }
 
-void
-VIBE_Main(const VIBE_Args args[static 1])
+int
+VIBE_Main(const VIBE_Args args[static 1], VIBE_ErrorCtx errors[static 1])
 {
   switch (VIBE_Args_GetApp(args)) {
     case VIBE_APP_EDITOR:
-      VIBE_Main_Editor(args);
+      VIBE_Main_Editor(args, errors);
       break;
     case VIBE_APP_VERSION:
       VIBE_Main_Version();
@@ -46,12 +52,15 @@ VIBE_Main(const VIBE_Args args[static 1])
       VIBE_Main_Help();
       break;
   }
+
+  return VIBE_ErrorCtx_GetExitCode(errors);
 }
 
 void
-VIBE_Main_Editor(const VIBE_Args args[static 1])
-{
-  (void)args; // TODO(daniel) Implement this
+VIBE_Main_Editor(const VIBE_Args args[static 1], VIBE_ErrorCtx errors[static 1])
+{ // TODO(daniel) Implement this
+  (void)args;
+  (void)errors;
 }
 
 void
