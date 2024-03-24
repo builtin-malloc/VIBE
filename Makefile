@@ -60,6 +60,7 @@ LDFLAGS :=
 
 CFLAGS += -std=c17 -c -MMD
 CFLAGS += -I$(INCDIR) -I$(CFGDIR)
+CFLAGS += -Werror
 
 ifeq ($(CONFIG), release)
 	CFLAGS += -O3 -DNDEBUG
@@ -69,7 +70,6 @@ endif
 
 ifeq ($(STRICT), yes)
 	CFLAGS += -Wall -Wextra -pedantic
-	CFLAGS += -Werror
 endif
 
 ifeq ($(OS), Darwin)
