@@ -53,12 +53,12 @@ BIN := $(OUTDIR)/$(NAME)-$(VERSION)-$(CONFIG)
 ################################################################################
 
 ifeq ($(OS), Darwin)
-	CC ?= clang
-	LD ?= clang
+	CC = clang
+	LD = clang
 endif
 ifeq ($(OS), Linux)
-	CC ?= gcc
-	LD ?= gcc
+	CC = gcc
+	LD = gcc
 endif
 
 CFLAGS  :=
