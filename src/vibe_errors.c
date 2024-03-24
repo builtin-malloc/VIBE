@@ -1,6 +1,9 @@
 #include <vibe_config.h>
 #include <vibe_errors.h>
 
+// Needed for stuff like strsignal
+#define _GNU_SOURCE
+
 #include <assert.h>
 #include <errno.h>
 #include <signal.h>
