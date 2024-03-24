@@ -4,7 +4,6 @@
 #include <vibe_config.h>
 #include <vibe_types.h>
 
-#include <limits.h>
 #include <stdio.h>
 
 // =============================================================================
@@ -25,7 +24,7 @@ typedef struct
 {
   VIBE_Errno err_first;
   FILE*      err_log_file;
-  char       err_log_path[PATH_MAX];
+  char       err_log_path[VIBE_PATH_MAX];
 } VIBE_ErrorCtx;
 
 // =============================================================================
