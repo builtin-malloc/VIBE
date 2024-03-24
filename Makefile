@@ -61,6 +61,7 @@ LDFLAGS :=
 CFLAGS += -std=c17 -c -MMD
 CFLAGS += -I$(INCDIR) -I$(CFGDIR)
 CFLAGS += -Werror
+CFLAGS += -DVIBE_VERSION=\"$(VERSION)\"
 
 ifeq ($(CONFIG), release)
 	CFLAGS += -O3 -DNDEBUG
