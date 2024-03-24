@@ -88,7 +88,7 @@ all: $(BIN)
 run: $(BIN)
 	%<
 
-$(BIN): $(APP_OBJS) $(LIB_OBJS) $(CFG_APPS)
+$(BIN): $(APP_OBJS) $(LIB_OBJS) $(CFG_OBJS)
 	@$(MKDIR_P) $(@D)
 	$(LD) -o $@ $(LDFLAGS) $^
 
