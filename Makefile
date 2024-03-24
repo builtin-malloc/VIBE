@@ -63,6 +63,8 @@ CFLAGS += -I$(INCDIR) -I$(CFGDIR)
 CFLAGS += -Werror
 CFLAGS += -DVIBE_VERSION=\"$(VERSION)\"
 
+LDFLAGS += -lc
+
 ifeq ($(CONFIG), release)
 	CFLAGS += -O3 -DNDEBUG
 else
