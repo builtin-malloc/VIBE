@@ -1,5 +1,7 @@
 #include "./main.h"
 
+#include <vibe_terminal.h>
+
 #include <stdio.h>
 
 // =============================================================================
@@ -15,8 +17,19 @@ static const char VIBE_VERSION_MESSAGE[] = "vibe v" VIBE_VERSION;
 // == GLOBAL DATA
 // =============================================================================
 
-static VIBE_Args     args   = VIBE_ARGS_DEFAULT;
-static VIBE_ErrorCtx errors = VIBE_ERROR_CTX_DEFAULT;
+static VIBE_Args     args     = VIBE_ARGS_DEFAULT;
+static VIBE_ErrorCtx errors   = VIBE_ERROR_CTX_DEFAULT;
+static VIBE_Terminal terminal = VIBE_TERMINAL_DEFAULT;
+
+// =============================================================================
+// == ERROR HANDLER
+// =============================================================================
+
+static void
+VIBE_ResetTerminalOnCrash(void)
+{
+  VIBE_Terminal_EnterOriginalMode(&terminal, &errors);
+}
 
 // =============================================================================
 // == MAIN
@@ -58,9 +71,15 @@ VIBE_Main(const VIBE_Args args[static 1], VIBE_ErrorCtx errors[static 1])
 
 void
 VIBE_Main_Editor(const VIBE_Args args[static 1], VIBE_ErrorCtx errors[static 1])
-{ // TODO(daniel) Implement this
+{
   (void)args;
-  (void)errors;
+
+  VIBE_Terminal_Acquire(&terminal, errors);
+
+  VIBE_Terminal_EnterRawMode(&terminal, errors);
+  VIBE_OnCrash(VIBE_ResetTerminalOnCrash);
+
+  VIBE_Terminal_Release(&terminal, errors);
 }
 
 void

@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <errno.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,10 +28,16 @@ static const char* const VIBE_ERRORNO_FMTS[] = {
   [VIBE_ERRNO_ERRORCTX_OPEN_FILE] = "Failed to open error log file \"%s\": %s",
   [VIBE_ERRNO_ARGS_UNKNOWN]       = "Unknown argument: %s",
   [VIBE_ERRNO_TERMINAL_READ_MODE] =
-    "Failed to read %zu bytes from the terminal: %s",
+    "Failed to read the current terminal mode: %s",
   [VIBE_ERRNO_TERMINAL_WRITE_MODE] =
-    "Failed to write %zu bytes from the terminal: %s",
+    "Failed to change the current terminal mode: %s",
 };
+
+// =============================================================================
+// == GLOBAL DATA
+// =============================================================================
+
+static void (*g_VIBE_ErrorHandler)(void) = NULL;
 
 // =============================================================================
 // == IO HELPERS
@@ -149,6 +156,36 @@ VIBE_ErrorCtx_WarningInFunc(VIBE_ErrorCtx ctx[static 1],
   va_start(args, err);
   VIBE_ErrorCtx_WriteErrorToFile(ctx->err_log_file, func, tag, fmt, args);
   va_end(args);
+}
+
+// =============================================================================
+// == CRASHES
+// =============================================================================
+
+static void
+VIBE_HandleSignal(int signal)
+{
+  fprintf(stderr, "[PANIC] Received %s\r\n", strsignal(signal));
+  if (g_VIBE_ErrorHandler)
+    g_VIBE_ErrorHandler();
+}
+
+void
+VIBE_OnCrash(void (*handler)(void))
+{
+  assert(handler);
+  assert(!g_VIBE_ErrorHandler);
+
+  g_VIBE_ErrorHandler = handler;
+
+  signal(SIGBUS, VIBE_HandleSignal);
+  signal(SIGHUP, VIBE_HandleSignal);
+  signal(SIGILL, VIBE_HandleSignal);
+  signal(SIGINT, VIBE_HandleSignal);
+  signal(SIGQUIT, VIBE_HandleSignal);
+  signal(SIGSEGV, VIBE_HandleSignal);
+  signal(SIGTERM, VIBE_HandleSignal);
+  signal(SIGTSTP, VIBE_HandleSignal);
 }
 
 // =============================================================================
